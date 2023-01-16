@@ -27,10 +27,6 @@ on:
       - ".github/workflows/qt-ci.yml"
       - ".github/workflows/update-gl-js.yml"
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
-
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -47,4 +43,5 @@ jobs:
       - name: Build Maplibre GL Core
         run: |
           cmake --version
+          mkdir build
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DMBGL_WITH_CORE_ONLY=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DMBGL_WITH_COVERAGE=ON
