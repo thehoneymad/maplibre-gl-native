@@ -1,0 +1,50 @@
+name: core-build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".gitignore"
+      - "**.md"
+      - "platform/**"
+      - ".github/FUNDING.yml"
+      - ".github/actions/**"
+      - ".github/workflows/android-ci.yml"
+      - ".github/workflows/android-docker-base.yml"
+      - ".github/workflows/android-docker-ndk-r21b.yml"
+      - ".github/workflows/gh-pages-android-api.yml"
+      - ".github/workflows/gh-pages-ios-api.yml"
+      - ".github/workflows/ios-ci.yml"
+      - ".github/workflows/ios-pre-release.yml"
+      - ".github/workflows/ios-release.yml"
+      - ".github/workflows/macos-ci.yml"
+      - ".github/workflows/macos-release.yml"
+      - ".github/workflows/node-ci.yml"
+      - ".github/workflows/node-release.yml"
+      - ".github/workflows/qt-ci-windows.yml"
+      - ".github/workflows/qt-ci.yml"
+      - ".github/workflows/update-gl-js.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Get latest CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: 3.10.2
+          ninjaVersion: latest
+      - name: Build Maplibre GL Core
+        run: |
+          cmake --version
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DMBGL_WITH_CORE_ONLY=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DMBGL_WITH_COVERAGE=ON
