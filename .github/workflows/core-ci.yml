@@ -38,12 +38,9 @@ jobs:
       - name: Get latest CMake and Ninja
         uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: 3.10.2
+          cmakeVersion: 3.24.1
           ninjaVersion: latest
       - name: Build Maplibre GL Core
         run: |
-          pwd
           cmake --version
-          mkdir build
-          pwd
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DMBGL_WITH_CORE_ONLY=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DMBGL_WITH_COVERAGE=ON
+          cmake -B build -DCMAKE_BUILD_TYPE=Debug -DMBGL_WITH_CORE_ONLY=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DMBGL_WITH_COVERAGE=ON
